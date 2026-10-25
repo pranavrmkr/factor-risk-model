@@ -118,7 +118,7 @@ def fit_models(data):
 
 
 def save_results(data, market_model, multi_factor_model):
-    factor_columns = ["Market", "Momentum", "Value", "Size"]
+    factor_columns = ["Market", "Momentum", "Value"]
 
     # Save factor coefficients and statistical significance.
     coefficients = pd.DataFrame({
