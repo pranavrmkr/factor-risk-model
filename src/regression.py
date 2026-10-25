@@ -69,8 +69,7 @@ def load_returns() -> pd.DataFrame:
 
 def fit_market_regression(
     returns: pd.DataFrame,
-) -> tuple[object, pd.DataFrame]:
-    #relate stock returns with funcitons
+) -> tuple[object, pd.DataFrame, pd.DataFrame]:
 
     y = returns[STOCK]
     X = sm.add_constant(returns[MARKET])
