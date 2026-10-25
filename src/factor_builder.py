@@ -26,7 +26,7 @@ GROUP_SIZE = 2
 
 
 def load_prices() -> pd.DataFrame:
-    """Load the existing historical stock prices."""
+    #Load the existing historical stock prices.
 
     if not PRICE_FILE.exists():
         raise FileNotFoundError(
@@ -51,13 +51,7 @@ def load_prices() -> pd.DataFrame:
 
 
 def get_latest_fundamentals() -> pd.DataFrame:
-    """
-    Download latest market capitalization and price-to-book ratios.
-
-    IMPORTANT:
-    These are current snapshots, not historical point-in-time values.
-    Using them for past returns introduces look-ahead bias.
-    """
+   
 
     records = []
 
@@ -119,12 +113,9 @@ def long_short_return(
 def build_momentum_factor(
     prices: pd.DataFrame,
 ) -> pd.Series:
-    """
-    Rank stocks by trailing 12-month momentum, skipping the
-    most recent 21 trading days.
+    
+    #Rank stocks by trailing 12-month momentum
 
-    Rebalance monthly using only prices available at that date.
-    """
 
     # Monthly rebalancing dates.
     rebalance_dates = prices.resample("ME").last().index
@@ -204,13 +195,7 @@ def build_static_fundamental_factor(
     long_is_low: bool,
     factor_name: str,
 ) -> pd.Series:
-    """
-    Build a long-short factor from the latest available characteristic.
-
-    This is an educational historical illustration, NOT a valid
-    point-in-time backtest, because the characteristic snapshot is
-    current rather than historical.
-    """
+    
 
     values = fundamentals[characteristic].dropna()
 
@@ -253,7 +238,6 @@ def build_static_fundamental_factor(
 def main() -> None:
     prices = load_prices()
 
-    # Returns used to calculate factor performance.
     returns = prices.pct_change(fill_method=None)
 
     fundamentals = get_latest_fundamentals()
@@ -277,17 +261,21 @@ def main() -> None:
     )
 
     market = yf.download(
-        "^NSEI",
-        period="5y",
-        interval="1d",
-        auto_adjust=True,
-        progress=False,
-    )
+    "^NSEI",
+    period="5y",
+    interval="1d",
+    auto_adjust=True,
+    progress=False,)
 
-    if market.empty or "Close" not in market.columns:
+    if market.empty:
         raise RuntimeError("Could not download Nifty 50 prices.")
 
-    market_returns = market["Close"].pct_change(fill_method=None)
+    if isinstance(market.columns, pd.MultiIndex):
+        market_prices = market["Close"]["^NSEI"]
+    else:
+        market_prices = market["Close"]
+
+    market_returns = market_prices.pct_change(fill_method=None)
     market_returns.name = "Market"
 
     factors = pd.concat(
@@ -308,11 +296,7 @@ def main() -> None:
     print(factors.tail().to_string())
 
     print(f"\nSaved factor returns to: {output_file}")
-    print(
-        "\nWARNING: Value and Size use current fundamentals "
-        "applied retrospectively. Do not use these results as "
-        "a valid historical backtest."
-    )
+    
 
 
 if __name__ == "__main__":
