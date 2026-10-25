@@ -96,7 +96,7 @@ def calculate_statistics(
 
     statistics["Observations"] = returns.count()
 
-    return statistics.round(3)
+    return statistics.round(6)
 
 
 def save_return_chart(returns: pd.DataFrame) -> None:
@@ -190,20 +190,7 @@ def main() -> None:
     print(f"\nAnalysis complete. Outputs saved to: {OUTPUT_DIR}")
 
 
-    #hdfc bank shows 0% return so to check 
-    print("\nHDFC Bank diagnostic:")
-    print("Raw daily returns:")
-    print(returns["HDFCBANK.NS"].dropna().head(10).to_string())
-
-    print("\nUnrounded mean daily return:")
-    print(f"{returns['HDFCBANK.NS'].mean():.10f}")
-
-    print("\nMean daily return as percentage:")
-    print(f"{returns['HDFCBANK.NS'].mean() * 100:.8f}%")
-
-    print("\nNumber of valid observations:")
-    print(returns["HDFCBANK.NS"].count())
-
+   
 
 if __name__ == "__main__":
     main()
