@@ -1,0 +1,21 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Editor settings
+.vscode/
+
+# Generated analysis output
+data/processed/
+*.log
+
+# Keep directory structure in Git
+!data/processed/.gitkeep
