@@ -48,7 +48,7 @@ def load_data():
             f"Available columns: {list(stock_returns.columns)}"
         )
 
-    required_factors = ["Market", "Momentum", "Value", "Size"]
+    required_factors = ["Market", "Momentum", "Value"]
 
     missing_factors = [
         factor for factor in required_factors
@@ -68,7 +68,7 @@ def prepare_data(stock_returns, factor_returns):
     stock = stock_returns[TARGET_STOCK].rename("Stock")
 
     factors = factor_returns[
-        ["Market", "Momentum", "Value", "Size"]
+        ["Market", "Momentum", "Value"]
     ]
 
     # Match observations by date.
@@ -87,7 +87,7 @@ def prepare_data(stock_returns, factor_returns):
     if data["Stock"].std() == 0:
         raise ValueError("The target stock returns have zero variation.")
 
-    if data[["Market", "Momentum", "Value", "Size"]].std().eq(0).any():
+    if data[["Market", "Momentum", "Value"]].std().eq(0).any():
         raise ValueError("At least one factor has zero variation.")
 
     return data
@@ -105,7 +105,7 @@ def fit_models(data):
     )
 
     # Model B: all four factors.
-    factor_columns = ["Market", "Momentum", "Value", "Size"]
+    factor_columns = ["Market", "Momentum", "Value"]
     X_factors = sm.add_constant(data[factor_columns])
 
     multi_factor_model = sm.OLS(y, X_factors).fit(
