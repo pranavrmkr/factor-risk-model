@@ -6,9 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# --------------------------------------------------
-# 1. Configuration
-# --------------------------------------------------
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "processed"
@@ -20,9 +18,7 @@ ROLLING_WINDOW = 21
 CONFIDENCE_LEVELS = [0.95, 0.99]
 
 
-# --------------------------------------------------
-# 2. Load out-of-sample predictions
-# --------------------------------------------------
+
 
 def load_data():
     if not PREDICTIONS_FILE.exists():
@@ -55,15 +51,11 @@ def load_data():
             f"Need at least {ROLLING_WINDOW} observations."
         )
 
-    # Out-of-sample model residuals.
+    # out of sample model residuals.
     data["Residual"] = data["Actual"] - data["Three_Factor"]
 
     return data
 
-
-# --------------------------------------------------
-# 3. Calculate risk statistics
-# --------------------------------------------------
 
 def calculate_risk_metrics(returns, series_name):
     returns = pd.Series(returns).dropna().astype(float)
@@ -123,9 +115,6 @@ def calculate_risk_metrics(returns, series_name):
     return metrics
 
 
-# --------------------------------------------------
-# 4. Calculate rolling volatility
-# --------------------------------------------------
 
 def calculate_rolling_volatility(data):
     rolling_vol = (
@@ -140,10 +129,6 @@ def calculate_rolling_volatility(data):
 
     return rolling_vol
 
-
-# --------------------------------------------------
-# 5. Save results and charts
-# --------------------------------------------------
 
 def save_outputs(data, rolling_vol, metrics):
     metrics_df = pd.DataFrame(metrics)
@@ -199,9 +184,6 @@ def save_outputs(data, rolling_vol, metrics):
     plt.close()
 
 
-# --------------------------------------------------
-# 6. Run risk analytics
-# --------------------------------------------------
 
 def main():
     data = load_data()
